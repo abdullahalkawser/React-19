@@ -1,23 +1,23 @@
-import React from 'react'
+import React, { useState } from "react";
 
-const Search = ({link,setLink}) => {
+const Search = ({ setSearchMovies }) => {
+  const [query, setQuery] = useState("");
+
+  const handleSearch = (e) => {
+    setQuery(e.target.value); // Update local state
+    setSearchMovies(e.target.value); // Update parent state in App.js
+  };
+
   return (
-    <div className='search'>
-<div>
-    <img src="./search.svg" alt="search.svg" />
-    <input type="text" 
-    placeholder='Search movi'
-    value={link}
-    onChange={(e)=>setLink(e.target.value)}
-    
-    />
-
-   
-</div>
-
-      
+    <div className="search">
+      <input
+        type="text"
+        placeholder="Search movies..."
+        value={query}
+        onChange={handleSearch}
+      />
     </div>
-  )
-}
+  );
+};
 
 export default Search;

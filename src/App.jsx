@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import Search from './componenst/search';
-import Spinner from './componenst/spinner';
-import Movicard from './componenst/Movicard';
+
 
 
 const API = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_API;
+import Search from './componenst/search';
+import Spinner from './componenst/spinner';
+import Movicard from './componenst/Movicard';
+import useDebounce from './../node_modules/react-use/esm/useDebounce';
 
 const API_OPTION = {
   method: "GET",
@@ -16,15 +18,23 @@ const API_OPTION = {
 };
 
 const App = () => {
+  const [searchmovies, setsearchmovies] = useState('');
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
-  const [link, setLink] = useState('');
   const [loading, setLoading] = useState(false); // State for loading
+  const [debounce, setdebounce] = useState('');
 
-  const fetchMovies = async () => {
+  useDebounce(()=>setdebounce(searchmovies),500,[searchmovies])
+
+
+
+  const fetchMovies = async (query = '') => {
     try {
       setLoading(true); // Set loading to true when fetching starts
-      const endpoint = `${API}/discover/movie?sort_by=popularity.desc`;
+      const endpoint = query
+        ? `${API}/search/movie?query=${encodeURIComponent(query)}`
+        : `${API}/discover/movie?sort_by=popularity.desc`;
+      
       const res = await fetch(endpoint, API_OPTION);
 
       if (!res.ok) {
@@ -34,7 +44,6 @@ const App = () => {
       const data = await res.json();
       console.log(data.results);  // Debugging log
 
-      // Ensure that movie data is available
       if (data.results) {
         setMovies(data.results);
       }
@@ -47,8 +56,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    fetchMovies(debounce);
+  }, [debounce]);
 
   return (
     <main>
@@ -60,22 +69,20 @@ const App = () => {
               Find Your Best Movie of All Time
             </h1>
           </header>
-          <Search link={link} setLink={setLink} />
-          <h1>{link}</h1>
+          <Search setSearchMovies={setsearchmovies} /> {/* Pass correct prop */}
 
           {error && <p className="error">{error}</p>}
 
-          <section className='all-movies '>
+          <section className='all-movies'>
             <h2>All Movies</h2>
             {/* Show loading message or spinner while loading */}
             {loading ? (
-           <Spinner/>// You can replace this with a spinner if needed
+              <Spinner />
             ) : (
-              <ul >
-                {/* Render movies here */}
+              <ul>
                 {movies.length > 0 ? (
                   movies.map((movie) => (
-           <Movicard movie = {movie}/>
+                    <Movicard key={movie.id} movie={movie} />
                   ))
                 ) : (
                   <p>No movies found</p>
