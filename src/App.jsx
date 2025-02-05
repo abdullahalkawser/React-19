@@ -64,7 +64,7 @@ const App = () => {
       <div className="pattern">
         <div className="wrapper">
           <header>
-            <img src="./hero.png" alt="hero" />
+            <img src="./hero.png" alt="hero-section" />
             <h1 className="text-gradient">
               Find Your Best Movie of All Time
             </h1>
@@ -85,7 +85,7 @@ const App = () => {
                     <Movicard key={movie.id} movie={movie} />
                   ))
                 ) : (
-                  <p>No movies found</p>
+                  <p>No movies found plz try again or sure name movi</p>
                 )}
               </ul>
             )}
