@@ -1,9 +1,7 @@
 import React from 'react'
 
 const Movicard = ({ movie }) => {
-    console.log(movie
 
-    )
     return (
 
         <div key={movie.id} className="movie-card">

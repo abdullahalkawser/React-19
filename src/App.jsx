@@ -8,6 +8,8 @@ import Search from './componenst/search';
 import Spinner from './componenst/spinner';
 import Movicard from './componenst/Movicard';
 import useDebounce from './../node_modules/react-use/esm/useDebounce';
+import { updatesearchcount } from './appwrite.js';
+
 
 const API_OPTION = {
   method: "GET",
@@ -42,10 +44,11 @@ const App = () => {
       }
 
       const data = await res.json();
-      console.log(data.results);  // Debugging log
+      // console.log(data.results);  // Debugging log
 
       if (data.results) {
         setMovies(data.results);
+        updatesearchcount(data.results)
       }
     } catch (error) {
       console.error(error.message);
